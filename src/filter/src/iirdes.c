@@ -184,7 +184,7 @@ void liquid_cplxpair_cleanup(float complex * _p,
 }
 
 
-// 
+//
 // new IIR design
 //
 
@@ -380,9 +380,6 @@ void iirdes_dzpk2sosf(float complex * _zd,
 
     // add remaining zero/pole pair if order is odd
     if (r) {
-        p0 = -pp[_n-1];
-        z0 = -zp[_n-1];
-        
         _A[3*i+0] =  1.0;
         _A[3*i+1] = -pp[_n-1];
         _A[3*i+2] =  0.0;
@@ -438,7 +435,7 @@ void iirdes_dzpk_lp2bp(liquid_float_complex * _zd,
                        liquid_float_complex * _zdt,
                        liquid_float_complex * _pdt)
 {
-    // 
+    //
     float c0 = cosf(2*M_PI*_f0);
 
     // transform zeros, poles using quadratic formula
@@ -619,10 +616,12 @@ void liquid_iirdes(liquid_iirdes_filtertype _ftype,
         memmove(zd, zd1, 2*_n*sizeof(float complex));
         memmove(pd, pd1, 2*_n*sizeof(float complex));
 
+#ifndef LIQUID_IIRDES_DEBUG_PRINT
         // update paramters : n -> 2*n
-        r = 0;
-        L = _n;
+        r  = 0;
         _n = 2*_n;
+        L  = _n;
+#endif
     }
 
     if (_format == LIQUID_IIRDES_TF) {

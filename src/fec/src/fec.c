@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-// 
+//
 // FEC (generic functions)
 //
 
@@ -343,8 +343,8 @@ unsigned int fec_conv_get_enc_msg_len(unsigned int _dec_msg_len,
 // compute encoded message length for Reed-Solomon codes
 //  _dec_msg_len    :   decoded message length
 //  _nroots         :   number of roots in polynomial
-//  _nn             :   
-//  _kk             :   
+//  _nn             :
+//  _kk             :
 // Example : if we are using the 8-bit code,
 //      _nroots  = 32
 //      _nn      = 255
@@ -642,6 +642,10 @@ void fec_decode_soft(fec _q,
     } else {
         // pack bytes and use hard-decision decoding
         unsigned enc_msg_len = fec_get_enc_msg_length(_q->scheme, _dec_msg_len);
+        if (enc_msg_len == 0)
+        {
+            // TODO: handle enc_msg_len == 0
+        }
         unsigned char msg_enc_hard[enc_msg_len];
         unsigned int i;
         for (i=0; i<enc_msg_len; i++) {

@@ -33,7 +33,7 @@
 
 #define DEBUG_FSKDEM 0
 
-// 
+//
 // internal methods
 //
 
@@ -116,7 +116,7 @@ fskdem fskdem_create(unsigned int _m,
         if (err < 1e-6f)
             break;
     }
-    
+
     // determine demodulation mapping between tones and frequency bins
     // TODO: use gray coding
     q->demod_map = (unsigned int *) malloc(q->M * sizeof(unsigned int));
@@ -223,9 +223,6 @@ unsigned int fskdem_demodulate(fskdem          _q,
 // get demodulator frequency error
 float fskdem_get_frequency_error(fskdem _q)
 {
-    // get index of peak bin
-    unsigned int index = _q->buf_freq[ _q->s_demod ];
-
     // extract peak value of previous, post FFT index
     float vm = cabsf( (_q->s_demod + _q->K - 1) % _q->K );  // previous
     float v0 = cabsf(  _q->s_demod                      );  // peak

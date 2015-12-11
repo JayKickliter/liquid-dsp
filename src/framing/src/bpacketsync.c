@@ -45,7 +45,7 @@ struct bpacketsync_s {
     crc_scheme crc;                 // payload check
     fec_scheme fec0;                // payload fec (inner)
     fec_scheme fec1;                // payload fec (outer)
-    
+
     // derived values
     unsigned int enc_msg_len;       // encoded mesage length
     unsigned int header_len;        // header length (12 bytes encoded)
@@ -122,9 +122,9 @@ bpacketsync bpacketsync_create(unsigned int _m,
     q->header_len = packetizer_compute_enc_msg_len(6, LIQUID_CRC_16, LIQUID_FEC_NONE, LIQUID_FEC_HAMMING128);
 
     // arrays
-    q->pnsequence  = (unsigned char*) malloc((q->pnsequence_len)*sizeof(unsigned char*));
-    q->payload_enc = (unsigned char*) malloc((q->enc_msg_len)*sizeof(unsigned char*));
-    q->payload_dec = (unsigned char*) malloc((q->dec_msg_len)*sizeof(unsigned char*));
+    q->pnsequence  = (unsigned char*) malloc((q->pnsequence_len)*sizeof(unsigned char));
+    q->payload_enc = (unsigned char*) malloc((q->enc_msg_len)*sizeof(unsigned char));
+    q->payload_dec = (unsigned char*) malloc((q->dec_msg_len)*sizeof(unsigned char));
 
     // create m-sequence generator
     // TODO : configure sequence from generator polynomial
@@ -278,7 +278,7 @@ void bpacketsync_execute_bit(bpacketsync _q,
     }
 }
 
-// 
+//
 // internal methods
 //
 
@@ -323,7 +323,7 @@ void bpacketsync_execute_rxheader(bpacketsync _q,
     _q->byte_rx <<= 1;
     _q->byte_rx |= (_bit & 1);
     _q->num_bits_received++;
-    
+
     if (_q->num_bits_received == 8) {
         // append byte to encoded header array
         _q->header_enc[_q->num_bytes_received] = _q->byte_rx ^ _q->byte_mask;
@@ -332,7 +332,7 @@ void bpacketsync_execute_rxheader(bpacketsync _q,
         _q->num_bytes_received++;
 
         if (_q->num_bytes_received == _q->header_len) {
-            
+
             _q->num_bits_received  = 0;
             _q->num_bytes_received = 0;
 
@@ -362,7 +362,7 @@ void bpacketsync_execute_rxpayload(bpacketsync _q,
     _q->byte_rx <<= 1;
     _q->byte_rx |= (_bit & 1);
     _q->num_bits_received++;
-    
+
     if (_q->num_bits_received == 8) {
         // append byte to encoded payload array
         _q->payload_enc[_q->num_bytes_received] = _q->byte_rx ^ _q->byte_mask;
@@ -371,7 +371,7 @@ void bpacketsync_execute_rxpayload(bpacketsync _q,
         _q->num_bytes_received++;
 
         if (_q->num_bytes_received == _q->enc_msg_len) {
-            
+
             _q->num_bits_received  = 0;
             _q->num_bytes_received = 0;
 

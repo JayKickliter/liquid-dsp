@@ -200,11 +200,11 @@ void ASGRAM(_execute)(ASGRAM()  _q,
 // contents and print standard format to stdout
 void ASGRAM(_print)(ASGRAM() _q)
 {
-    float maxval;
-    float maxfreq;
+    float maxval  = 0;
+    float maxfreq = 0;
     char ascii[_q->nfft+1];
     ascii[_q->nfft] = '\0'; // append null character to end of string
-        
+
     // execute the spectrogram
     ASGRAM(_execute)(_q, ascii, &maxval, &maxfreq);
 

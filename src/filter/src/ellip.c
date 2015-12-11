@@ -77,7 +77,7 @@ void ellipkf(float _k,
     // define range for k due to machine precision
     float kmin = 4e-4f;
     float kmax = sqrtf(1-kmin*kmin);
-    
+
     float K;
     float Kp;
 
@@ -311,10 +311,9 @@ void ellip_azpkf(unsigned int _n,
     printf("K1, K1p     : %12.8f, %12.8f\n", K1, K1p);
 #endif
 
-    float Nexact = (K1p/K1)/(Kp/K); // 4.69604063
-    float N = ceilf(Nexact);        // 5
-    N = _n;
+    float N = _n;
 #if LIQUID_DEBUG_ELLIP_PRINT
+    float Nexact = (K1p/K1)/(Kp/K); // 4.69604063
     printf("N (exact)   : %12.8f\n", Nexact);
     printf("N           : %12.8f\n", N);
 #endif

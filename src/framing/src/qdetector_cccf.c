@@ -91,7 +91,7 @@ qdetector_cccf qdetector_cccf_create(float complex * _s,
         fprintf(stderr,"error: qdetector_cccf_create(), sequence length cannot be zero\n");
         exit(1);
     }
-    
+
     // allocate memory for main object and set internal properties
     qdetector_cccf q = (qdetector_cccf) malloc(sizeof(struct qdetector_cccf_s));
     q->s_len = _s_len;
@@ -126,7 +126,7 @@ qdetector_cccf qdetector_cccf_create(float complex * _s,
     q->state          = QDETECTOR_STATE_SEEK;
     q->frame_detected = 0;
     memset(q->buf_time_0, 0x00, q->nfft*sizeof(float complex));
-    
+
     // reset estimates
     q->tau_hat   = 0.0f;
     q->gamma_hat = 0.0f;
@@ -169,7 +169,7 @@ qdetector_cccf qdetector_cccf_create_linear(float complex * _sequence,
         fprintf(stderr,"error: qdetector_cccf_create_linear(), excess bandwidth factor must be in [0,1]\n");
         exit(1);
     }
-    
+
     // create time-domain template
     unsigned int    s_len = _k * (_sequence_len + 2*_m);
     float complex * s     = (float complex*) malloc(s_len * sizeof(float complex));
@@ -215,7 +215,7 @@ qdetector_cccf qdetector_cccf_create_gmsk(unsigned char * _sequence,
         fprintf(stderr,"error: qdetector_cccf_create_gmsk(), excess bandwidth factor must be in [0,1]\n");
         exit(1);
     }
-    
+
     // create time-domain template using GMSK modem
     unsigned int    s_len = _k * (_sequence_len + 2*_m);
     float complex * s     = (float complex*) malloc(s_len * sizeof(float complex));
@@ -381,7 +381,7 @@ void qdetector_cccf_execute_seek(qdetector_cccf _q,
 
     if (_q->counter < _q->nfft)
         return;
-    
+
     // reset counter (last half of time buffer)
     _q->counter = _q->nfft/2;
 
@@ -391,7 +391,7 @@ void qdetector_cccf_execute_seek(qdetector_cccf _q,
     // compute scaling factor (TODO: use median rather than mean signal level)
     float g0 = sqrtf(_q->x2_sum_0 + _q->x2_sum_1) * sqrtf((float)(_q->s_len) / (float)(_q->nfft));
     float g = 1.0f / ( (float)(_q->nfft) * g0 * sqrtf(_q->s2_sum) );
-    
+
     // sweep over carrier frequency offset range
     int offset;
     unsigned int i;
@@ -411,7 +411,7 @@ void qdetector_cccf_execute_seek(qdetector_cccf _q,
 
         // run inverse transform
         fft_execute(_q->ifft);
-        
+
         // scale output appropriately
         liquid_vectorcf_mulscalar(_q->buf_time_1, _q->nfft, g, _q->buf_time_1);
 
@@ -467,7 +467,7 @@ void qdetector_cccf_execute_seek(qdetector_cccf _q,
 #if DEBUG_QDETECTOR_PRINT
     printf(" no detect, rxy = %12.8f, time index=%u, freq. offset=%d\n", rxy_peak, rxy_index, rxy_offset);
 #endif
-    
+
     // copy last half of fft input buffer to front
     memmove(_q->buf_time_0, _q->buf_time_0 + _q->nfft/2, (_q->nfft/2)*sizeof(float complex));
 
@@ -554,7 +554,6 @@ void qdetector_cccf_execute_align(qdetector_cccf _q,
     float        vpos = cabsf(_q->buf_freq_0[ipos]);
     a            =  0.5f*(vpos + vneg) - v0;
     b            =  0.5f*(vpos - vneg);
-    c            =  v0;
     float idx    = -b / (2.0f*a); //-0.5f*(vpos - vneg) / (vpos + vneg - 2*v0);
     float index  = (float)i0 + idx;
     _q->dphi_hat = (i0 > _q->nfft/2 ? index-(float)_q->nfft : index) * 2*M_PI / (float)(_q->nfft);

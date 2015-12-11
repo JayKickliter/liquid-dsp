@@ -95,7 +95,7 @@ void liquid_firdes_fnyquist(liquid_firfilt_type _type,
 
     // compute ifft
     fft_run(h_len, H, h, LIQUID_FFT_BACKWARD, 0);
-    
+
     // copy shifted, scaled response
     for (i=0; i<h_len; i++)
         _h[i] = crealf( h[(i+_k*_m+1)%h_len] ) * (float)_k / (float)(h_len);
