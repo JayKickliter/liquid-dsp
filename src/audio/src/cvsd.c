@@ -20,7 +20,7 @@
  * THE SOFTWARE.
  */
 
-// 
+//
 // CVSD: continuously variable slope delta
 //
 
@@ -201,8 +201,8 @@ float cvsd_decode(cvsd _q,
 }
 
 // encode 8 samples
-void cvsd_encode8(cvsd _q,
-                  float * _audio,
+void cvsd_encode8(cvsd            _q,
+                  const float   * _audio,
                   unsigned char * _data)
 {
     unsigned char data=0x00;
