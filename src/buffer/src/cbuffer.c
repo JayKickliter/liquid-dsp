@@ -46,13 +46,13 @@ struct CBUFFER(_s) {
 
     // number of elements allocated in memory
     unsigned int num_allocated;
-    
+
     // number of elements currently in buffer
     unsigned int num_elements;
-    
+
     // index to read
     unsigned int read_index;
-    
+
     // index to write
     unsigned int write_index;
 };
@@ -104,7 +104,7 @@ void CBUFFER(_destroy)(CBUFFER() _q)
 }
 
 // print cbuffer object properties
-void CBUFFER(_print)(CBUFFER() _q)
+void CBUFFER(_print)(const CBUFFER() _q)
 {
     printf("cbuffer%s [max size: %u, max read: %u, elements: %u]\n",
             EXTENSION,
@@ -121,7 +121,7 @@ void CBUFFER(_print)(CBUFFER() _q)
 }
 
 // print cbuffer object properties and internal state
-void CBUFFER(_debug_print)(CBUFFER() _q)
+void CBUFFER(_debug_print)(const CBUFFER() _q)
 {
     printf("cbuffer%s [max size: %u, max read: %u, elements: %u]\n",
             EXTENSION,
@@ -166,32 +166,32 @@ void CBUFFER(_clear)(CBUFFER() _q)
 }
 
 // get the number of elements currently in the buffer
-unsigned int CBUFFER(_size)(CBUFFER() _q)
+unsigned int CBUFFER(_size)(const CBUFFER() _q)
 {
     return _q->num_elements;
 }
 
 // get the maximum number of elements the buffer can hold
-unsigned int CBUFFER(_max_size)(CBUFFER() _q)
+unsigned int CBUFFER(_max_size)(const CBUFFER() _q)
 {
     return _q->max_size;
 }
 
 // get the maximum number of elements that can be read from
 // the buffer at any given time.
-unsigned int CBUFFER(_max_read)(CBUFFER() _q)
+unsigned int CBUFFER(_max_read)(const CBUFFER() _q)
 {
     return _q->max_read;
 }
 
 // return number of elements available for writing
-unsigned int CBUFFER(_space_available)(CBUFFER() _q)
+unsigned int CBUFFER(_space_available)(const CBUFFER() _q)
 {
     return _q->max_size - _q->num_elements;
 }
 
 // is buffer full?
-int CBUFFER(_is_full)(CBUFFER() _q)
+int CBUFFER(_is_full)(const CBUFFER() _q)
 {
     return (_q->num_elements == _q->max_size ? 1 : 0);
 }
@@ -224,7 +224,7 @@ void CBUFFER(_push)(CBUFFER() _q,
 //  _v  : output array
 //  _n  : number of samples to write
 void CBUFFER(_write)(CBUFFER()    _q,
-                     T *          _v,
+                     const T *    _v,
                      unsigned int _n)
 {
     // ensure number of samples to write doesn't exceed space available
@@ -278,15 +278,15 @@ void CBUFFER(_pop)(CBUFFER()    _q,
 //  _num_requested  : number of elements requested
 //  _v              : output pointer
 //  _nr             : number of elements referenced by _v
-void CBUFFER(_read)(CBUFFER()      _q,
-                    unsigned int   _num_requested,
-                    T **           _v,
-                    unsigned int * _num_read)
+void CBUFFER(_read)(const CBUFFER() _q,
+                    unsigned int    _num_requested,
+                    T **            _v,
+                    unsigned int *  _num_read)
 {
     // adjust number requested depending upon availability
     if (_num_requested > _q->num_elements)
         _num_requested = _q->num_elements;
-    
+
     // restrict maximum number of elements to originally specified value
     if (_num_requested > _q->max_read)
         _num_requested = _q->max_read;
@@ -294,7 +294,7 @@ void CBUFFER(_read)(CBUFFER()      _q,
     // linearize tail end of buffer if necessary
     if (_num_requested > (_q->max_size - _q->read_index))
         CBUFFER(_linearize)(_q);
-    
+
     // set output pointer appropriately
     *_v        = _q->v + _q->read_index;
     *_num_read = _num_requested;

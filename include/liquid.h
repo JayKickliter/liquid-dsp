@@ -223,28 +223,28 @@ CBUFFER() CBUFFER(_create_max)(unsigned int _max_size,          \
 void CBUFFER(_destroy)(CBUFFER() _q);                           \
                                                                 \
 /* print cbuffer object properties                          */  \
-void CBUFFER(_print)(CBUFFER() _q);                             \
+void CBUFFER(_print)(const CBUFFER() _q);                       \
                                                                 \
 /* print cbuffer object properties and internal state       */  \
-void CBUFFER(_debug_print)(CBUFFER() _q);                       \
+void CBUFFER(_debug_print)(const CBUFFER() _q);                 \
                                                                 \
 /* clear internal buffer                                    */  \
 void CBUFFER(_clear)(CBUFFER() _q);                             \
                                                                 \
 /* get the number of elements currently in the buffer       */  \
-unsigned int CBUFFER(_size)(CBUFFER() _q);                      \
+unsigned int CBUFFER(_size)(const CBUFFER() _q);                \
                                                                 \
 /* get the maximum number of elements the buffer can hold   */  \
-unsigned int CBUFFER(_max_size)(CBUFFER() _q);                  \
+unsigned int CBUFFER(_max_size)(const CBUFFER() _q);            \
                                                                 \
 /* get the maximum number of elements you may read at once  */  \
-unsigned int CBUFFER(_max_read)(CBUFFER() _q);                  \
+unsigned int CBUFFER(_max_read)(const CBUFFER() _q);            \
                                                                 \
 /* get the number of available slots (max_size - size)      */  \
-unsigned int CBUFFER(_space_available)(CBUFFER() _q);           \
+unsigned int CBUFFER(_space_available)(const CBUFFER() _q);     \
                                                                 \
 /* is buffer full?                                          */  \
-int CBUFFER(_is_full)(CBUFFER() _q);                            \
+int CBUFFER(_is_full)(const CBUFFER() _q);                      \
                                                                 \
 /* write a single sample into the buffer                    */  \
 /*  _q  : circular buffer object                            */  \
@@ -257,7 +257,7 @@ void CBUFFER(_push)(CBUFFER() _q,                               \
 /*  _v  : output array                                      */  \
 /*  _n  : number of samples to write                        */  \
 void CBUFFER(_write)(CBUFFER()    _q,                           \
-                     T *          _v,                           \
+                     const T *    _v,                           \
                      unsigned int _n);                          \
                                                                 \
 /* remove and return a single element from the buffer       */  \
@@ -271,7 +271,7 @@ void CBUFFER(_pop)(CBUFFER() _q,                                \
 /*  _num_requested  : number of elements requested          */  \
 /*  _v              : output pointer                        */  \
 /*  _nr             : number of elements referenced by _v   */  \
-void CBUFFER(_read)(CBUFFER()      _q,                          \
+void CBUFFER(_read)(const CBUFFER()      _q,                    \
                     unsigned int   _num_requested,              \
                     T **           _v,                          \
                     unsigned int * _num_read);                  \
