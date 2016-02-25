@@ -73,7 +73,7 @@ void AGC(_destroy)(AGC() _q)
 }
 
 // print agc object internals
-void AGC(_print)(AGC() _q)
+void AGC(_print)(const AGC() _q)
 {
     printf("agc [rssi: %12.4fdB]:\n", AGC(_get_rssi)(_q));
 }
@@ -127,7 +127,7 @@ void AGC(_execute)(AGC() _q,
 //  _n      : number of input, output samples
 //  _y      : output data array, [size: _n x 1]
 void AGC(_execute_block)(AGC()        _q,
-                         TC *         _x,
+                         const TC *   _x,
                          unsigned int _n,
                          TC *         _y)
 {
@@ -149,7 +149,7 @@ void AGC(_unlock)(AGC() _q)
 }
 
 // get agc loop bandwidth
-float AGC(_get_bandwidth)(AGC() _q)
+float AGC(_get_bandwidth)(const AGC() _q)
 {
     return _q->bandwidth;
 }
@@ -177,7 +177,7 @@ void AGC(_set_bandwidth)(AGC() _q,
 }
 
 // get estimated signal level (linear)
-float AGC(_get_signal_level)(AGC() _q)
+float AGC(_get_signal_level)(const AGC() _q)
 {
     return 1.0f / _q->g;
 }
@@ -200,7 +200,7 @@ void AGC(_set_signal_level)(AGC() _q,
 }
 
 // get estimated signal level (dB)
-float AGC(_get_rssi)(AGC() _q)
+float AGC(_get_rssi)(const AGC() _q)
 {
     return -20*log10(_q->g);
 }
@@ -221,7 +221,7 @@ void AGC(_set_rssi)(AGC() _q,
 }
 
 // get internal gain
-float AGC(_get_gain)(AGC() _q)
+float AGC(_get_gain)(const AGC() _q)
 {
     return _q->g;
 }
@@ -245,7 +245,7 @@ void AGC(_set_gain)(AGC() _q,
 //  _x      : input data array, [size: _n x 1]
 //  _n      : number of input, output samples
 void AGC(_init)(AGC()        _q,
-                TC *         _x,
+                const TC *   _x,
                 unsigned int _n)
 {
     // ensure number of samples is greater than zero

@@ -42,7 +42,7 @@ extern "C" {
 
 //
 // Compile-time version numbers
-// 
+//
 // LIQUID_VERSION = "X.Y.Z"
 // LIQUID_VERSION_NUMBER = (X*1000000 + Y*1000 + Z)
 //
@@ -67,7 +67,7 @@ int liquid_libversion_number(void);
 #define LIQUID_CONCAT(prefix, name) prefix ## name
 #define LIQUID_VALIDATE_INPUT
 
-/* 
+/*
  * Compile-time complex data type definitions
  *
  * Default: use the C99 complex data type, otherwise
@@ -87,7 +87,7 @@ int liquid_libversion_number(void);
 LIQUID_DEFINE_COMPLEX(float,  liquid_float_complex);
 LIQUID_DEFINE_COMPLEX(double, liquid_double_complex);
 
-// 
+//
 // MODULE : agc (automatic gain control)
 //
 
@@ -108,7 +108,7 @@ AGC() AGC(_create)(void);                                       \
 void AGC(_destroy)(AGC() _q);                                   \
                                                                 \
 /* print object properties to stdout                        */  \
-void AGC(_print)(AGC() _q);                                     \
+void AGC(_print)(const AGC() _q);                               \
                                                                 \
 /* reset object's internal state                            */  \
 void AGC(_reset)(AGC() _q);                                     \
@@ -127,7 +127,7 @@ void AGC(_execute)(AGC() _q,                                    \
 /*  _n      : number of input, output samples               */  \
 /*  _y      : output data array, [size: _n x 1]             */  \
 void AGC(_execute_block)(AGC()        _q,                       \
-                         TC *         _x,                       \
+                         const TC *   _x,                       \
                          unsigned int _n,                       \
                          TC *         _y);                      \
                                                                 \
@@ -136,19 +136,19 @@ void AGC(_lock)(  AGC() _q);                                    \
 void AGC(_unlock)(AGC() _q);                                    \
                                                                 \
 /* get/set loop filter bandwidth; attack/release time       */  \
-float AGC(_get_bandwidth)(AGC() _q);                            \
+float AGC(_get_bandwidth)(const AGC() _q);                      \
 void  AGC(_set_bandwidth)(AGC() _q, float _bt);                 \
                                                                 \
 /* get/set signal level (linear) relative to unity energy   */  \
-float AGC(_get_signal_level)(AGC() _q);                         \
+float AGC(_get_signal_level)(const AGC() _q);                   \
 void  AGC(_set_signal_level)(AGC() _q, float _signal_level);    \
                                                                 \
 /* get/set signal level (dB) relative to unity energy       */  \
-float AGC(_get_rssi)(AGC() _q);                                 \
+float AGC(_get_rssi)(const AGC() _q);                           \
 void  AGC(_set_rssi)(AGC() _q, float _rssi);                    \
                                                                 \
 /* get/set gain value (linear) relative to unity energy     */  \
-float AGC(_get_gain)(AGC() _q);                                 \
+float AGC(_get_gain)(const AGC() _q);                           \
 void  AGC(_set_gain)(AGC() _q, float _gain);                    \
                                                                 \
 /* initialize internal gain on input array                  */  \
@@ -156,7 +156,7 @@ void  AGC(_set_gain)(AGC() _q, float _gain);                    \
 /*  _x      : input data array, [size: _n x 1]              */  \
 /*  _n      : number of input, output samples               */  \
 void AGC(_init)(AGC()        _q,                                \
-                TC *         _x,                                \
+                const TC *   _x,                                \
                 unsigned int _n);                               \
 
 // Define agc APIs
@@ -555,7 +555,7 @@ LIQUID_DOTPROD_DEFINE_API(DOTPROD_MANGLE_CRCF,
                           float,
                           liquid_float_complex)
 
-// 
+//
 // sum squared methods
 //
 
@@ -851,7 +851,7 @@ typedef enum {
     LIQUID_FEC_HAMMING74,       // Hamming (7,4) block code, r1/2 (really 4/7)
     LIQUID_FEC_HAMMING84,       // Hamming (7,4) with extra parity bit, r1/2
     LIQUID_FEC_HAMMING128,      // Hamming (12,8) block code, r2/3
-    
+
     LIQUID_FEC_GOLAY2412,       // Golay (24,12) block code, r1/2
     LIQUID_FEC_SECDED2216,      // SEC-DED (22,16) block code, r8/11
     LIQUID_FEC_SECDED3932,      // SEC-DED (39,32) block code
@@ -955,7 +955,7 @@ void fec_decode_soft(fec _q,
                      unsigned char * _msg_enc,
                      unsigned char * _msg_dec);
 
-// 
+//
 // Packetizer
 //
 
@@ -1119,8 +1119,8 @@ typedef enum {
     LIQUID_FFT_UNKNOWN  =   0,  // unknown transform type
 
     // regular complex one-dimensional transforms
-    LIQUID_FFT_FORWARD  =  +1,  // complex one-dimensional FFT 
-    LIQUID_FFT_BACKWARD =  -1,  // complex one-dimensional inverse FFT 
+    LIQUID_FFT_FORWARD  =  +1,  // complex one-dimensional FFT
+    LIQUID_FFT_BACKWARD =  -1,  // complex one-dimensional inverse FFT
 
     // discrete cosine transforms
     LIQUID_FFT_REDFT00  =  10,  // real one-dimensional DCT-I
@@ -1223,7 +1223,7 @@ LIQUID_FFT_DEFINE_API(LIQUID_FFT_MANGLE_FLOAT,float,liquid_float_complex)
 //                                  int _flags);
 
 
-// 
+//
 // spectral periodogram
 //
 
@@ -1329,7 +1329,7 @@ LIQUID_SPGRAM_DEFINE_API(LIQUID_SPGRAM_MANGLE_FLOAT,
                          liquid_float_complex,
                          float)
 
-// 
+//
 // asgram : ascii spectral periodogram
 //
 
@@ -2484,7 +2484,7 @@ LIQUID_FIRPFB_DEFINE_API(FIRPFB_MANGLE_CCCF,
                          liquid_float_complex,
                          liquid_float_complex)
 
-// 
+//
 // Interpolators
 //
 
@@ -2652,7 +2652,7 @@ LIQUID_IIRINTERP_DEFINE_API(IIRINTERP_MANGLE_CCCF,
                             liquid_float_complex,
                             liquid_float_complex)
 
-// 
+//
 // Decimators
 //
 
@@ -2830,7 +2830,7 @@ LIQUID_IIRDECIM_DEFINE_API(IIRDECIM_MANGLE_CCCF,
 
 
 
-// 
+//
 // Half-band resampler
 //
 #define RESAMP2_MANGLE_RRRF(name)   LIQUID_CONCAT(resamp2_rrrf,name)
@@ -2928,7 +2928,7 @@ LIQUID_RESAMP2_DEFINE_API(RESAMP2_MANGLE_CCCF,
                           liquid_float_complex)
 
 
-// 
+//
 // Arbitrary resampler
 //
 #define RESAMP_MANGLE_RRRF(name)    LIQUID_CONCAT(resamp_rrrf,name)
@@ -3014,7 +3014,7 @@ LIQUID_RESAMP_DEFINE_API(RESAMP_MANGLE_CCCF,
                          liquid_float_complex)
 
 
-// 
+//
 // Multi-stage half-band resampler
 //
 
@@ -3081,7 +3081,7 @@ LIQUID_MSRESAMP2_DEFINE_API(MSRESAMP2_MANGLE_CCCF,
                             liquid_float_complex)
 
 
-// 
+//
 // Multi-stage arbitrary resampler
 //
 #define MSRESAMP_MANGLE_RRRF(name)    LIQUID_CONCAT(msresamp_rrrf,name)
@@ -3137,7 +3137,7 @@ LIQUID_MSRESAMP_DEFINE_API(MSRESAMP_MANGLE_CCCF,
                            liquid_float_complex)
 
 
-// 
+//
 // Symbol timing recovery (symbol synchronizer)
 //
 #define SYMSYNC_MANGLE_RRRF(name)   LIQUID_CONCAT(symsync_rrrf,name)
@@ -3668,7 +3668,7 @@ void flexframesync_debug_print(flexframesync _q,
 // bpacket : binary packet suitable for data streaming
 //
 
-// 
+//
 // bpacket generator/encoder
 //
 typedef struct bpacketgen_s * bpacketgen;
@@ -3713,7 +3713,7 @@ void bpacketgen_encode(bpacketgen _q,
                        unsigned char * _msg_dec,
                        unsigned char * _packet);
 
-// 
+//
 // bpacket synchronizer/decoder
 //
 typedef struct bpacketsync_s * bpacketsync;
@@ -3803,7 +3803,7 @@ void gmskframesync_debug_print(gmskframesync _q, const char * _filename);
 
 
 
-// 
+//
 // OFDM flexframe generator
 //
 
@@ -3871,7 +3871,7 @@ void ofdmflexframegen_assemble(ofdmflexframegen _q,
 int ofdmflexframegen_writesymbol(ofdmflexframegen _q,
                                  liquid_float_complex * _buffer);
 
-// 
+//
 // OFDM flex frame synchronizer
 //
 
@@ -4115,7 +4115,7 @@ int detector_cccf_correlate(detector_cccf        _q,
                             float *              _gamma_hat);
 
 
-// 
+//
 // symbol streaming for testing (no meaningful data, just symbols)
 //
 #define SYMSTREAM_MANGLE_CFLOAT(name) LIQUID_CONCAT(symstreamcf,name)
@@ -4156,7 +4156,7 @@ void SYMSTREAM(_reset)(SYMSTREAM() _q);                         \
 void SYMSTREAM(_write_samples)(SYMSTREAM()  _q,                 \
                                TO *         _buf,               \
                                unsigned int _buf_len);          \
-    
+
 LIQUID_SYMSTREAM_DEFINE_API(SYMSTREAM_MANGLE_CFLOAT, liquid_float_complex)
 
 
@@ -4221,13 +4221,13 @@ void MSOURCE(_set_frequency)(MSOURCE() _q,                      \
 void MSOURCE(_write_samples)(MSOURCE()    _q,                   \
                              TO *         _buf,                 \
                              unsigned int _buf_len);            \
-    
+
 LIQUID_MSOURCE_DEFINE_API(MSOURCE_MANGLE_CFLOAT, liquid_float_complex)
 
 
 
 
-// 
+//
 // Symbol tracking: AGC > symsync > EQ > carrier recovery
 //
 #define SYMTRACK_MANGLE_RRRF(name) LIQUID_CONCAT(symtrack_rrrf,name)
@@ -4297,7 +4297,7 @@ void SYMTRACK(_execute_block)(SYMTRACK()     _q,                \
                               unsigned int   _nx,               \
                               TO *           _y,                \
                               unsigned int * _ny);              \
-    
+
 LIQUID_SYMTRACK_DEFINE_API(SYMTRACK_MANGLE_RRRF,
                            float,
                            float,
@@ -4376,7 +4376,7 @@ unsigned int liquid_nextpow2(unsigned int _x);
 // (n choose k) = n! / ( k! (n-k)! )
 float liquid_nchoosek(unsigned int _n, unsigned int _k);
 
-// 
+//
 // Windowing functions
 //
 
@@ -4569,7 +4569,7 @@ void poly_binomial_expand_pm(unsigned int _n,
                              int * _c);
 #endif
 
-// 
+//
 // modular arithmetic, etc.
 //
 
@@ -5018,7 +5018,7 @@ LIQUID_SMATRIX_DEFINE_API(SMATRIX_MANGLE_BOOL,  unsigned char)
 LIQUID_SMATRIX_DEFINE_API(SMATRIX_MANGLE_FLOAT, float)
 LIQUID_SMATRIX_DEFINE_API(SMATRIX_MANGLE_INT,   short int)
 
-// 
+//
 // smatrix cross methods
 //
 
@@ -5286,7 +5286,7 @@ void gmskdem_demodulate(gmskdem _q,
                         liquid_float_complex * _y,
                         unsigned int * _sym);
 
-// 
+//
 // Analog frequency modulator
 //
 #define LIQUID_FREQMOD_MANGLE_FLOAT(name) LIQUID_CONCAT(freqmod,name)
@@ -5491,7 +5491,7 @@ unsigned int fskdem_demodulate(fskdem                 _q,
 float fskdem_get_frequency_error(fskdem _q);
 
 
-// 
+//
 // Analog frequency demodulator
 //
 
@@ -5780,7 +5780,7 @@ void ofdmframe_print_sctype(unsigned char * _p,
                             unsigned int    _M);
 
 
-// 
+//
 // OFDM frame (symbol) generator
 //
 typedef struct ofdmframegen_s * ofdmframegen;
@@ -5822,7 +5822,7 @@ void ofdmframegen_writesymbol(ofdmframegen _q,
 void ofdmframegen_writetail(ofdmframegen _q,
                             liquid_float_complex * _x);
 
-// 
+//
 // OFDM frame (symbol) synchronizer
 //
 typedef int (*ofdmframesync_callback)(liquid_float_complex * _y,
@@ -5861,7 +5861,7 @@ void ofdmframesync_debug_disable(ofdmframesync _q);
 void ofdmframesync_debug_print(ofdmframesync _q, const char * _filename);
 
 
-// 
+//
 // MODULE : nco (numerically-controlled oscillator)
 //
 
@@ -6060,7 +6060,7 @@ float qnsearch_execute(qnsearch _g,
                        unsigned int _max_iterations,
                        float _target_utility);
 
-// 
+//
 // chromosome (for genetic algorithm search)
 //
 typedef struct chromosome_s * chromosome;
@@ -6123,7 +6123,7 @@ unsigned int chromosome_value(chromosome _c,
 float chromosome_valuef(chromosome _c,
                         unsigned int _index);
 
-// 
+//
 // genetic algorithm search
 //
 typedef struct gasearch_s * gasearch;
@@ -6406,7 +6406,7 @@ void bsequence_create_ccodes(bsequence _a,
 #define LIQUID_MSEQUENCE_GENPOLY_M13    0x201b  // 13    8191    20033    10000000011011
 #define LIQUID_MSEQUENCE_GENPOLY_M14    0x402b  // 14   16383    40053   100000000101011
 #define LIQUID_MSEQUENCE_GENPOLY_M15    0x8003  // 15   32767   100003  1000000000000011
-   
+
 typedef struct msequence_s * msequence;
 
 // create a maximal-length sequence (m-sequence) object with
@@ -6460,7 +6460,7 @@ void msequence_set_state(msequence    _ms,
                          unsigned int _a);
 
 
-// 
+//
 // MODULE : utility
 //
 
@@ -6527,7 +6527,7 @@ void liquid_repack_bytes(unsigned char * _sym_in,
                          unsigned int _sym_out_bps,
                          unsigned int _sym_out_len,
                          unsigned int * _num_written);
- 
+
 // shift array to the left _b bits, filling in zeros
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6535,7 +6535,7 @@ void liquid_repack_bytes(unsigned char * _sym_in,
 void liquid_lbshift(unsigned char * _src,
                     unsigned int _n,
                     unsigned int _b);
- 
+
 // shift array to the right _b bits, filling in zeros
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6543,7 +6543,7 @@ void liquid_lbshift(unsigned char * _src,
 void liquid_rbshift(unsigned char * _src,
                     unsigned int _n,
                     unsigned int _b);
- 
+
 // circularly shift array to the left _b bits
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6551,7 +6551,7 @@ void liquid_rbshift(unsigned char * _src,
 void liquid_lbcircshift(unsigned char * _src,
                         unsigned int _n,
                         unsigned int _b);
- 
+
 // circularly shift array to the right _b bits
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6559,7 +6559,7 @@ void liquid_lbcircshift(unsigned char * _src,
 void liquid_rbcircshift(unsigned char * _src,
                         unsigned int _n,
                         unsigned int _b);
- 
+
 
 
 
@@ -6570,7 +6570,7 @@ void liquid_rbcircshift(unsigned char * _src,
 void liquid_lshift(unsigned char * _src,
                    unsigned int _n,
                    unsigned int _b);
- 
+
 // shift array to the right _b bytes, filling in zeros
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6578,7 +6578,7 @@ void liquid_lshift(unsigned char * _src,
 void liquid_rshift(unsigned char * _src,
                    unsigned int _n,
                    unsigned int _b);
- 
+
 // circular shift array to the left _b bytes
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6586,7 +6586,7 @@ void liquid_rshift(unsigned char * _src,
 void liquid_lcircshift(unsigned char * _src,
                        unsigned int _n,
                        unsigned int _b);
- 
+
 // circular shift array to the right _b bytes
 //  _src        :   source address [size: _n x 1]
 //  _n          :   input data array size
@@ -6594,9 +6594,9 @@ void liquid_lcircshift(unsigned char * _src,
 void liquid_rcircshift(unsigned char * _src,
                        unsigned int _n,
                        unsigned int _b);
- 
+
 // Count the number of ones in an integer
-unsigned int liquid_count_ones(unsigned int _x); 
+unsigned int liquid_count_ones(unsigned int _x);
 
 // count number of ones in an integer, modulo 2
 unsigned int liquid_count_ones_mod2(unsigned int _x);
@@ -6606,7 +6606,7 @@ unsigned int liquid_bdotprod(unsigned int _x,
                              unsigned int _y);
 
 // Count leading zeros in an integer
-unsigned int liquid_count_leading_zeros(unsigned int _x); 
+unsigned int liquid_count_leading_zeros(unsigned int _x);
 
 // Most-significant bit index
 unsigned int liquid_msb_index(unsigned int _x);
@@ -6621,7 +6621,7 @@ unsigned int  liquid_reverse_uint16(unsigned int  _x);
 unsigned int  liquid_reverse_uint24(unsigned int  _x);
 unsigned int  liquid_reverse_uint32(unsigned int  _x);
 
-// 
+//
 // MODULE : vector
 //
 
@@ -6695,7 +6695,7 @@ void VECTOR(_normalize)(T *          _x,                        \
 LIQUID_VECTOR_DEFINE_API(VECTOR_MANGLE_RF, float,                float);
 LIQUID_VECTOR_DEFINE_API(VECTOR_MANGLE_CF, liquid_float_complex, float);
 
-// 
+//
 // mixed types
 //
 #if 0
